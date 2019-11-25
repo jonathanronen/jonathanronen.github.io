@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Plotly -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+      });
+    </script>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    <title>When Can I Retire?</title>
+  </head>
+  <body>
+    
+    <div class="container">
+      <div class="py-5 text-center">
+        <img class="d-block mx-auto mb-4" src="https://img.thedailybeast.com/image/upload/c_crop,d_placeholder_euli9k,h_710,w_1263,x_0,y_0/dpr_2.0/c_limit,w_128/fl_lossy,q_auto/v1525427532/Screen_Shot_2018-05-04_at_5.19.55_AM_snbq38" alt="">
+        <h2>When can I retire?</h2>
+        <p class="lead">Unlike RBG, who can only retire January 2021, you can retire when your living expenses are covered by your investment returns. If you'd like to know what that means for you, use this calculator!</p>
+      </div>
+
+      <div class="row">
+        
+        <div class="col">
+          <h4 class="mb-3">Your finances</h4>
+          <form class="needs-validation" novalidate>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="alpha">Yearly returns (while saving)</label>
+                <input type="text" class="form-control" id="alpha" placeholder="" value="1.05" required onchange="update_all();">
+                <div class="invalid-feedback">
+                  Gotta know what kind of yearly returns you're banking on.
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="beta">Yearly returns (in retirement)</label>
+                <input type="text" class="form-control" id="beta" placeholder="" value="1.04" required onchange="update_all();">
+                <div class="invalid-feedback">
+                  Gotta know what kind of yearly returns you're banking on.
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="savings">Current savings</label>
+                <input type="text" class="form-control" id="savings" placeholder="" value="30000" required onchange="update_all();">
+                <div class="invalid-feedback">
+                  How much money are you starting with?
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="expenses">Living expenses (yearly)</label>
+                <input type="text" class="form-control" id="expenses" placeholder="" value="50000" required onchange="update_all();">
+                <div class="invalid-feedback">
+                  How much money do you spend each year?
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="saving_rate">Yearly savings rate</label>
+                <input type="text" class="form-control" id="saving_rate" placeholder="" value="30000" required onchange="update_all();">
+                <div class="invalid-feedback">
+                  How much do you save each year?
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="wealth_target">Wealth target</label>
+                <input type="text" class="form-control" id="wealth_target" placeholder="" value="" disabled onchange="update_all();">
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="row">
+        <div class="col">
+          <h4 class="mb-3">Your time to retirement</h4>
+          <h6 id="congrats"></h6>
+          <div id="ttr-graph">
+          </div>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="py-5 text-center">
+        <img class="d-block mx-auto mb-4" src="https://vignette.wikia.nocookie.net/pawnstarsthegame/images/8/84/Stretch_Serpent_Head.png/revision/latest?cb=20111222134500" alt="">
+        <h2>Should you buy the new toy?</h2>
+        <p class="lead">So now that you're all set to retire, you might be asking yourself this question: "Should I buy this cool new toy for $XXX, and save <i>a little less</i> this month"? This little calculator will help you figure out how much more you'd have to work for buying that toy. Or alternatively, how much sooner you'd be able to retire, if you saved that money instead!</p>
+      </div>
+
+      <div class="row">
+        
+        <div class="col">
+          <h4 class="mb-3">The New Toy</h4>
+          <form class="needs-validation" novalidate>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="cost">Cost</label>
+                <input type="text" class="form-control" id="cost" placeholder="" value="2500" required onchange="update_all();">
+                <div class="invalid-feedback">
+                  How much is this thing?
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="setback">Setback</label>
+                <input type="text" class="form-control" id="setback" placeholder="" value="" required onchange="update_all();" disabled><small>days</small>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+
+
+      <hr>
+
+      <div class="py-5 text-center">
+        <img class="d-block mx-auto mb-4" src="https://qph.fs.quoracdn.net/main-qimg-25e11828931c9f3f30ae1059af576408" alt="" height=128 width=128>
+        <h2>How does this work?</h2>
+        <p class="lead">It's pretty simple, really..."</p>
+      </div>
+
+      <div class="row">
+        
+        <div class="col">
+          <h4 class="mb-3">Defititions</h4>
+          <table class="table table-hover">
+
+            <tbody>
+              <tr>
+                <th scope="row">$\alpha$</th>
+                <td>Average yearly returns while saving.</td>
+              </tr>
+              <tr>
+                <th scope="row">$\beta$</th>
+                <td>Expected yearly returns while retired. Typically, more conservative than while saving.</td>
+              </tr>
+              <tr>
+                <th scope="row">$s$</th>
+                <td colspan="2">Current savings</td>
+              </tr>
+              <tr>
+                <th scope="row">$e$</th>
+                <td colspan="2">Yearly living expenses.</td>
+              </tr>
+              <tr>
+                <th scope="row">$r$</th>
+                <td colspan="2">Yearly savings rate.</td>
+              </tr>
+              <tr>
+                <th scope="row">$g$</th>
+                <td colspan="2">Savings goal. This is the amount you need to have saved up in order for your yearly returns ($\beta$) to cover your living expenses $e$. You guessed it, $g = \frac{e}{\beta}$</td>
+              </tr>
+              <tr>
+                <th scope="row">$w(t)$</th>
+                <td colspan="2">Your wealth over time. This is your starting savings ($s$), with compounding interest ($\alpha$) over time, in addition to your yearly savings $r$, also with compounding interest. $w(t) = s\alpha^t + \sum_0^t r\alpha^\tau$.</td>
+              </tr>
+              <tr>
+                <th scope="row">$T$</th>
+                <td colspan="2">The time to retirement</td>
+              </tr>
+            </tbody>
+          </table>
+          * For simplicity's sake, let's assume all these returns are above inflation level.
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col">
+            <h4 class="mb-3">Your savings goal</h4>
+            <p>Your savings goal $g$ is the amount of money you need saved up for your <i>conservative</i> returns, $\beta$, to cover your living expenses, $e$. In other words, if you invest $g$ moneys with $\beta$ yearly returns, you'll be able to live off of your returns, and hence <b>retire!</b></p>
+            <p>It is straightforward to calculate: $g = \frac{e}{\beta}$.</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <h4 class="mb-3">How is $T$ calculated?</h4>
+            <p>Your time to retirement, $T$, is the time at which your wealth is equal to your savings goal, $w(T) = g$.</p>
+            <p>$T$ is the solution to the following equation: $g = s\alpha^T + \sum_0^T r\alpha^\tau$. You probably recognize that this is the <a href="https://en.wikipedia.org/wiki/Geometric_series#Sum">sum of a geometric series</a>.</p>
+            <p>The solution is given by: $T = \frac{log(\frac{(g(\alpha-1)+r)}{(\alpha(r+s)-s))}}{log(\alpha)}$.</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <h4 class="mb-3">How do you figure out how many days earlier I could retire?</h4>
+            <p>That's simple! We calculate $T$ as above, and subtract it from $T$ calculated with $s+c$ for your current savings, instead of $s$, where $c$ is the cost of your shiny new toy.</p>
+          </div>
+
+      </div>
+      </div>
+    </div>
+
+    <footer class="page-footer font-small blue">
+
+      <!-- Copyright -->
+      <div class="footer-copyright text-center py-3">
+        <a href="https://github.com/jonathanronen/">@jonathanronen</a>, 2019
+      </div>
+      <!-- Copyright -->
+
+    </footer>
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script>
+      function get_alpha() {
+        return parseFloat($("#alpha").val());
+      }
+      function set_alpha(val) {
+        $("#alpha").val(val);
+      }
+      function get_beta() {
+        return parseFloat($("#beta").val());
+      }
+      function set_beta(val) {
+        $("#beta").val(val);
+      }
+      function get_savings() {
+        return parseFloat($("#savings").val());
+      }
+      function set_savings(val) {
+        $("#savings").val(val);
+      }
+      function get_expenses() {
+        return parseFloat($("#expenses").val());
+      }
+      function set_expenses(val) {
+        $("#expenses").val(val);
+      }
+      function get_saving_rate() {
+        return parseFloat($("#saving_rate").val());
+      }
+      function set_saving_rate(val) {
+        $("#saving_rate").val(val);
+      }
+      function get_wealth_target() {
+        return parseFloat($("#wealth_target").val());
+      }
+      function set_wealth_target(val) {
+        $("#wealth_target").val(val);
+      }
+      function get_cost() {
+        return parseFloat($("#cost").val());
+      }
+      function set_cost(val) {
+        $("#cost").val(val);
+      }
+      function get_setback() {
+        return parseFloat($("#setback").val());
+      }
+      function set_setback(val) {
+        $("#setback").val(val);
+      }
+
+
+      function update_wealth_target() {
+        var wealth_target = get_expenses() / (get_beta()-1);
+        set_wealth_target(wealth_target.toFixed(2));
+      }
+
+      function ttr_param(g, alpha, r, s) {
+        return Math.log((g*(alpha-1)+r) / (alpha*(r+s)-s)) / Math.log(alpha);
+      }
+      function ttr() {
+        var g = get_wealth_target();
+        var alpha = get_alpha();
+        var r = get_saving_rate();
+        var s = get_savings();
+
+        return ttr_param(g, alpha, r, s);
+      }
+
+      function make_ts() {
+        var ts = [];
+        for(var t = new Date().getFullYear(); t <= new Date().getFullYear()+ttr(); t++) {
+          ts.push(t);
+        }
+        return ts;
+      }
+
+      function wealth_at_time(t) {
+        s = get_savings();
+        alpha = get_alpha();
+        r = get_saving_rate();
+        ts = make_ts();
+        w = s * Math.pow(alpha, t);
+        for(i=0; i<t+1; i++) {
+          w += r*Math.pow(alpha,i);
+        }
+        return w;
+      }
+
+      function wealth_over_time() {
+        ts = make_ts();
+        ws = Array(ts.length);
+        for (t=0; t < ws.length; t++) {
+          ws[t] = wealth_at_time(t);
+        }
+        return ws;
+      }
+
+      function update_congrats() {
+        $("#congrats").text("Congratulations, you can retire in " + ttr().toFixed(1) + " years!");
+      }
+
+      function plot_ttr(){
+        var the_div = document.getElementById('ttr-graph');
+
+        var data = [
+          {
+            x: make_ts(),
+            y: wealth_over_time(),
+            name: "wealth"
+          },
+          {
+            x: [new Date().getFullYear() + ttr(), new Date().getFullYear() + ttr()],
+            y: [new Date().getFullYear(), get_wealth_target()],
+            name: "retirement!"
+          },
+          {
+            x: [new Date().getFullYear(), new Date().getFullYear() + ttr()],
+            y: [get_wealth_target(), get_wealth_target()],
+            name: "target"
+          }
+        ];
+
+        var layout = {
+          showlegend: true,
+          margin: {
+            t: 0
+          },
+          xaxis: {
+            title: {
+              text: 'Year',
+              font: {
+                family: 'Courier New, monospace',
+                size: 18,
+                color: '#7f7f7f'
+              }
+            },
+          },
+          yaxis: {
+            title: {
+              text: 'Wealth',
+              font: {
+                family: 'Courier New, monospace',
+                size: 18,
+                color: '#7f7f7f'
+              }
+            }
+          }
+        };
+        Plotly.newPlot(
+          the_div,
+          data,
+          layout
+        );
+      }
+
+      function calc_setback() {
+        var g = get_wealth_target();
+        var alpha = get_alpha();
+        var r = get_saving_rate();
+        var s = get_savings();
+        var c = get_cost();
+
+        var delta = (ttr_param(g, alpha, r, s) - ttr_param(g-c, alpha, r, s)) * 365;
+        return delta.toFixed(0);
+      }
+
+      function update_setback() {
+        $("#setback").val(calc_setback());
+      }
+
+      function update_all() {
+        update_wealth_target();
+        update_congrats();
+        plot_ttr();
+
+        update_setback();
+      }
+
+      $('document').ready(function(){
+        update_all();
+      });
+    </script>
+  </body>
+</html>
