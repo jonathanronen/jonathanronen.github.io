@@ -386,14 +386,14 @@
       }
 
       function calc_setback() {
-        var g = get_wealth_target();
-        var alpha = get_alpha();
-        var r = get_saving_rate();
-        var s = get_savings();
-        var c = get_cost();
+        const g = get_wealth_target();
+        const alpha = get_alpha();
+        const r = get_saving_rate();
+        const s = get_savings();
+        const c = get_cost();
 
-        var delta = (ttr_param(g, alpha, r, s) - ttr_param(g-c, alpha, r, s)) * 365;
-        return delta.toFixed(0);
+        const delta = (ttr_param(g, alpha, r, s) - ttr_param(g-c, alpha, r, s)) * 365;
+        return delta.toFixed(1);
       }
 
       function update_setback() {
