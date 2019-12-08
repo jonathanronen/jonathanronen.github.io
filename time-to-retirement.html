@@ -166,7 +166,7 @@
               </tr>
               <tr>
                 <th scope="row">$w(t)$</th>
-                <td colspan="2">Your wealth over time. This is your starting savings ($s$), with compounding interest ($\alpha$) over time, in addition to your yearly savings $r$, also with compounding interest. $w(t) = s\alpha^t + \sum_{\tau=1}^{t-1} r\alpha^\tau$.</td>
+                <td colspan="2">Your wealth over time. This is your starting savings ($s$), with compounding interest ($\alpha$) over time, in addition to your yearly savings $r$, also with compounding interest. $w(t) = s\alpha^t + \sum_{\tau=1}^{t} r\alpha^\tau$.</td>
               </tr>
               <tr>
                 <th scope="row">$T$</th>
@@ -188,7 +188,7 @@
           <div class="col">
             <h4 class="mb-3">How is $T$ calculated?</h4>
             <p>Your time to retirement, $T$, is the time at which your wealth is equal to your savings goal, $w(T) = g$.</p>
-            <p>$T$ is the solution to the following equation: $g = s\alpha^T + \sum_{\tau=1}^{T-1} r\alpha^\tau$. You probably recognize that this is the <a href="https://en.wikipedia.org/wiki/Geometric_progression#Geometric_series">geometric series</a>.</p>
+            <p>$T$ is the solution to the following equation: $g = s\alpha^T + \sum_{\tau=1}^{T} r\alpha^\tau$. You probably recognize that this is the <a href="https://en.wikipedia.org/wiki/Geometric_progression#Geometric_series">geometric series</a>.</p>
             <p>The solution is given by: $T = \frac{log \frac{\alpha g - g + \alpha r}{r + \alpha s - s}}{log \alpha}$.</p>
           </div>
         </div>
