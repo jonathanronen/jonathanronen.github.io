@@ -92,6 +92,14 @@
         </div>
       </div>
 
+      <div class="row">
+        <div class="col">
+          <h4 class="mb-3">Your yearly returns</h4>
+          <div id="returns-graph">
+          </div>
+        </div>
+      </div>
+
       <hr>
 
       <div class="py-5 text-center">
@@ -299,32 +307,43 @@
       function make_ts() {
         const retirement_year = new Date().getFullYear()+Math.ceil(ttr());
         const ts = [];
-        for(let t = new Date().getFullYear(); t <= retirement_year; t++) {
+        for(let t = new Date().getFullYear(); t <= retirement_year + 5; t++) {
           ts.push(t);
         }
 
         return ts;
       }
 
-      function wealth_at_time(t) {
-        const s = get_savings();
-        const alpha = get_alpha();
-        const r = get_saving_rate();
-        const ts = make_ts();
-        let w = s * Math.pow(alpha, t);
-        for(tau=1; tau<t+1; tau++) {
-          w += r*Math.pow(alpha,tau-1);
-        }
-        return w;
-      }
-
       function wealth_over_time() {
         const ts = make_ts();
         const ws = Array(ts.length);
-        for (t=0; t < ws.length; t++) {
-          ws[t] = wealth_at_time(t);
+        const retirement_year = new Date().getFullYear() + ttr();
+        ws[0] = get_savings();
+
+        for (t=1; t < ws.length; t++) {
+          if(ts[t] < retirement_year) {
+            ws[t] = get_alpha() * ws[t-1] + get_saving_rate();
+          } else {
+            ws[t] = get_wealth_target();
+          }
         }
         return ws;
+      }
+
+      function returns_over_time() {
+        const ts = make_ts();
+        const ws = wealth_over_time();
+        const returns = Array(ts.length);
+        const retirement_year = ts[0] + ttr();
+
+        for (t=0; t < ws.length; t++) {
+          rate = get_alpha();
+          if(ts[t] > retirement_year) {
+            rate = get_beta();
+          }
+          returns[t] = ws[t] * (rate-1);
+        }
+        return returns;
       }
 
       function update_congrats() {
@@ -385,6 +404,77 @@
         );
       }
 
+
+      function plot_returns(){
+        const the_div = document.getElementById('returns-graph');
+
+        const retirement_year = new Date().getFullYear() + ttr();
+        const fullx = make_ts();
+        const fully = returns_over_time();
+
+        const savings_x = Array();
+        const savings_y = Array();
+        const retired_x = Array();
+        const retired_y = Array();
+
+        for(t=0; t < fullx.length; t++) {
+          if(fullx[t] < retirement_year) {
+            savings_x.push(fullx[t]);
+            savings_y.push(fully[t]);
+          } else {
+            retired_x.push(fullx[t]);
+            retired_y.push(fully[t]);
+          }
+        }
+
+        const data = [
+          {
+            x: savings_x,
+            y: savings_y,
+            name: "returns (saving)",
+            type: "bar"
+          },
+          {
+            x: retired_x,
+            y: retired_y,
+            name: "returns (retired)",
+            type: "bar"
+          }
+        ];
+
+        const layout = {
+          showlegend: true,
+          margin: {
+            t: 0
+          },
+          xaxis: {
+            title: {
+              text: 'Year',
+              font: {
+                family: 'Courier New, monospace',
+                size: 18,
+                color: '#7f7f7f'
+              }
+            },
+          },
+          yaxis: {
+            title: {
+              text: 'Returns',
+              font: {
+                family: 'Courier New, monospace',
+                size: 18,
+                color: '#7f7f7f'
+              }
+            }
+          }
+        };
+        Plotly.newPlot(
+          the_div,
+          data,
+          layout
+        );
+      }
+
       function calc_setback() {
         const g = get_wealth_target();
         const alpha = get_alpha();
@@ -420,6 +510,7 @@
           update_wealth_target();
           update_congrats();
           plot_ttr();
+          plot_returns();
 
           update_setback();
         }
