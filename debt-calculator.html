@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Plotly -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- MathJax -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+      });
+    </script>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    <title>Debt calculator</title>
+  </head>
+  <body>
+    
+    <div class="container">
+      <div class="py-5 text-center">
+        <img class="d-block mx-auto mb-4" src="img/dollars.jpg" alt="dollars" width=600px>
+        <h2>How much is your debt costing you?</h2>
+        <p class="lead">Do you have some credit card debt, student loans, or other debt? If you wonder how much it's costing you, you can use this calculator.</p>
+      </div>
+
+      <div class="row">
+        
+        <div class="col">
+          <h4 class="mb-3">Your debt</h4>
+          <form class="needs-validation" novalidate>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="type_0">Type</label>
+                <input type="text" class="form-control" id="type_0" placeholder="" value="credit card" required onchange="update_all();">
+                <div class="invalid-feedback">
+                  Just a name for this debt
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="interest_0">Annual interest rate</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">%</div>
+                  </div>
+                  <input type="text" class="form-control" id="interest_0" placeholder="" value="18" required onchange="update_all();">
+                </div>
+                <div class="invalid-feedback">
+                  Unless you debt is free, at which case you don't need this.
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="debt_0">Total debt</label>
+                <input type="text" class="form-control" id="debt_0" placeholder="" value="5000" required onchange="update_all();">
+                <div class="invalid-feedback">
+                  How much do you owe?
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="repay_0">Payment rate</label>
+                <input type="text" class="form-control" id="repay_0" placeholder="" value="150" required onchange="update_all();">
+                <div class="invalid-feedback">
+                  The size of the payments you're making on the debt
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <div id="freq_0">
+                  <label for="freq_0">Payment frequency</label>
+                  <br/>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="freq_0" id="freq_0_yearly" value="yearly">
+                    <label class="form-check-label" for="freq_0_yearly">Yearly</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="freq_0" id="freq_0_quarterly" value="quarterly">
+                    <label class="form-check-label" for="freq_0_quarterly">Quarterly</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="freq_0" id="freq_0_monthly" value="monthly" checked>
+                    <label class="form-check-label" for="freq_0_monthly">Monthly</label>
+                  </div>
+                  <div class="invalid-feedback">
+                    How often do you make payments on this debt?
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="total_0">Total payments</label>
+                <input type="text" class="form-control" id="total_0" placeholder="" value="" disabled>
+                <div class="invalid-feedback">
+                  This is how much you're going to repay
+                </div>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="row">
+        <div class="col">
+          <h4 class="mb-3">Your debt over time</h4>
+          <h6 id="congrats"></h6>
+          <div id="debt-graph">
+          </div>
+        </div>
+      </div>
+
+      
+    </div>
+
+    <footer class="page-footer font-small blue">
+
+      <!-- Copyright -->
+      <div class="footer-copyright text-center py-3">
+        <a href="https://github.com/jonathanronen/">@jonathanronen</a>, 2019
+      </div>
+      <!-- Copyright -->
+
+    </footer>
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script>
+      function get_interest() {
+        return parseFloat($("#interest_0").val());
+      }
+      function set_interest(val) {
+        $("#interest_0").val(val);
+      }
+      function get_debt() {
+        return parseFloat($("#debt_0").val());
+      }
+      function set_debt(val) {
+        $("#debt_0").val(val);
+      }
+      function get_repay() {
+        return parseFloat($("#repay_0").val());
+      }
+      function set_repay(val) {
+        $("#repay_0").val(val);
+      }
+      function get_freq() {
+        return $("#freq_0 input:radio:checked").val()
+      }
+      function set_total(val) {
+        $("#total_0").val(val);
+      }
+
+      function get_alpha() {
+        let interval_interest = get_interest();
+        if(get_freq() == "quarterly") { interval_interest /= 4; }
+        else if(get_freq() == "monthly") { interval_interest /= 12; }
+
+        return interval_interest / 100;
+
+      }
+      
+
+      function debt_over_time() {
+        let interval = 365/12;
+        if(get_freq() == "yearly") { interval = 365; }
+        else if(get_freq() == "quarterly") { interval = 365/4; }
+
+        const alpha = get_alpha();
+
+        const ts = [new Date()];
+        const debt = [get_debt()];
+        const interest_addons = [alpha * get_debt()];
+        let i = 1;
+        let total = 0;
+        while(true) {
+          ts.push(new Date());
+          ts[i].setDate(ts[i].getDate() + i * interval);
+
+          debt.push(debt[i-1] * (1+alpha) - get_repay());
+          if(debt[i] <= 0) {
+            total += debt[i-1];
+            debt[i] = 0;
+            break
+          } else {
+            total += get_repay();
+          }
+
+          interest_addons.push(debt[i] * alpha);
+          if(i++ > 1000){
+            break
+          }
+        }
+        return {
+          "t": ts,
+          "debt": debt,
+          "interest": interest_addons,
+          "total": total
+        }
+
+      }
+      
+
+      function plot_debt(){
+        const the_div = document.getElementById('debt-graph');
+
+        const d = debt_over_time();
+        set_total(d.total.toFixed(2));
+
+        const data = [
+          {
+            x: d.t,
+            y: d.debt,
+            name: "remaining debt"
+          }
+        ];
+
+        const layout = {
+          showlegend: true,
+          margin: {
+            t: 0
+          },
+          xaxis: {
+            title: {
+              text: 'Date',
+              font: {
+                family: 'Courier New, monospace',
+                size: 18,
+                color: '#7f7f7f'
+              }
+            },
+          },
+          yaxis: {
+            title: {
+              text: 'Debt',
+              font: {
+                family: 'Courier New, monospace',
+                size: 18,
+                color: '#7f7f7f'
+              }
+            }
+          }
+        };
+        Plotly.newPlot(
+          the_div,
+          data,
+          layout
+        );
+      }
+
+
+
+      function validate_all() {
+        return true;
+      }
+
+      function update_all() {
+        if(validate_all()) {
+          plot_debt();
+        }
+      }
+
+      $('document').ready(function(){
+        update_all();
+      });
+    </script>
+  </body>
+</html>
