@@ -38,42 +38,52 @@
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="alpha">Yearly returns (while saving)</label>
-                <input type="text" class="form-control" id="alpha" placeholder="" value="1.05" required onchange="update_all();">
-                <div class="invalid-feedback">
-                  Gotta know what kind of yearly returns you're banking on.
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">%</div>
+                  </div>
+                  <input type="number" min=0 step=0.1 class="form-control" id="alpha" placeholder="" value="5.0" required onchange="update_all();">
+                  <div class="invalid-feedback">
+                    Gotta know what kind of yearly returns you're banking on.
+                  </div>
                 </div>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="beta">Yearly returns (in retirement)</label>
-                <input type="text" class="form-control" id="beta" placeholder="" value="1.04" required onchange="update_all();">
-                <div class="invalid-feedback">
-                  Gotta know what kind of yearly returns you're banking on. And it's gotta be positive (i.e. greater than $1.0$) for this model to work.
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">%</div>
+                  </div>
+                  <input type="number" min=0 step=0.1 class="form-control" id="beta" placeholder="" value="4.0" required onchange="update_all();">
+                  <div class="invalid-feedback">
+                    Gotta know what kind of yearly returns you're banking on. And it's gotta be positive (i.e. greater than 0%) for this model to work.
+                  </div>
                 </div>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="savings">Current savings</label>
-                <input type="text" class="form-control" id="savings" placeholder="" value="30000" required onchange="update_all();">
+                <input type="number" min=0 step=1000 class="form-control" id="savings" placeholder="" value="30000" required onchange="update_all();">
                 <div class="invalid-feedback">
                   How much money are you starting with?
                 </div>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="expenses">Living expenses (yearly)</label>
-                <input type="text" class="form-control" id="expenses" placeholder="" value="50000" required onchange="update_all();">
+                <input type="number" min=0 step=1000 class="form-control" id="expenses" placeholder="" value="50000" required onchange="update_all();">
                 <div class="invalid-feedback">
                   How much money do you spend each year?
                 </div>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="saving_rate">Yearly savings rate</label>
-                <input type="text" class="form-control" id="saving_rate" placeholder="" value="30000" required onchange="update_all();">
+                <input type="number" min=0 step=1000 class="form-control" id="saving_rate" placeholder="" value="30000" required onchange="update_all();">
                 <div class="invalid-feedback">
                   How much do you save each year?
                 </div>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="wealth_target">Wealth target</label>
-                <input type="text" class="form-control" id="wealth_target" placeholder="" value="" disabled onchange="update_all();">
+                <input type="number" class="form-control" id="wealth_target" placeholder="" value="" disabled onchange="update_all();">
               </div>
             </div>
           </form>
@@ -230,13 +240,13 @@
 
     <script>
       function get_alpha() {
-        return parseFloat($("#alpha").val());
+        return parseFloat($("#alpha").val())/100+1;
       }
       function set_alpha(val) {
         $("#alpha").val(val);
       }
       function get_beta() {
-        return parseFloat($("#beta").val());
+        return parseFloat($("#beta").val())/100+1;
       }
       function set_beta(val) {
         $("#beta").val(val);
